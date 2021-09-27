@@ -24,7 +24,12 @@ SOFTWARE.
 """
 
 from .exceptions import *
-from .mathcompiler import MathCompiler, compute, default_functions as mathfunctions
+from .mathcompiler import (
+    MathCompiler,
+    compute,
+    default_functions as mathfunctions,
+    default_constants as mathconstants
+)
 
 __author__ = "PlayerG9"
 __copyright__ = "Copyright 2021, PlayerG9"
