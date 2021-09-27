@@ -1,5 +1,6 @@
 # -*- coding=utf-8 -*-
 import math
+import re
 import logging
 from .exceptions import *
 
@@ -14,6 +15,14 @@ default_functions = {
     'pow': math.pow,
     'sqrt': math.sqrt,
 }
+
+default_constants = {
+    'pi': math.pi,
+    'e': math.e,
+    'inf': math.inf
+}
+
+default_dict = {**default_functions, **default_constants}  # combine both
 
 
 class MathCompiler:
