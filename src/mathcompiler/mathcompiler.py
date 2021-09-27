@@ -1,5 +1,10 @@
 # -*- coding=utf-8 -*-
 import math
+import logging
+from .exceptions import *
+
+
+logging.getLogger(__package__).setLevel(logging.WARNING)
 
 
 default_functions = {
@@ -18,6 +23,9 @@ class MathCompiler:
 
 default_compiler = MathCompiler()
 
+compute = default_compiler.compute
 
-def compute(equation: str, **kwargs):
-    default_compiler.compute(equation, kwargs)
+# import functools
+# @functools.wraps(default_compiler.compute)
+# def compute(equation: str, **kwargs) -> float:
+#     return default_compiler.compute(equation, kwargs)
