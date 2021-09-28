@@ -56,6 +56,44 @@ class MathCompiler:
         pass
 
 
+class Number:
+    def __init__(self, val: str):
+        try:
+            self.val = float(val)  # parse float (ex 14.9)
+        except ValueError:
+            try:
+                self.val = float(int(val))  # parse int (to float) (ex 8)
+            except ValueError:
+                raise NumberParseError("can't parse {!r}".format(val))
+
+
+class Variable:
+    def __init__(self, val: str, consts: dict):
+        try:
+            self.val = consts[val]
+        except KeyError:
+            raise VariableMissingError("can't find {!r}".format(val))
+
+
+class Snipped:
+    def __init__(self, equation: str, compiler: MathCompiler):
+        self.equation = equation
+        self.compiler = compiler
+
+
+class Function(Snipped):
+    def __init__(self, name: str, equation: str, compiler: MathCompiler):
+        super().__init__(equation, compiler)
+        try:
+            self.callback = compiler.functions[name]
+        except KeyError:
+            raise FunctionMissingError("can't find {!r}".format(name))
+
+
+class Brackets(Snipped):
+    pass
+
+
 default_compiler = MathCompiler(default_functions, default_constants)
 
 
