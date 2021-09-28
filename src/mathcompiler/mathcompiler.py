@@ -35,14 +35,19 @@ class MathCompiler:
     solve_dots = re.compile(r'')
     solve_lines = re.compile(r'')
     solve_statement = re.compile(r'')
+    variables: dict
 
     def __init__(self, functions: dict, constants: dict):
         self.functions = functions
         self.constants = constants
 
     def compute(self, equation: str, variables: dict, auto_round: bool = True) -> float:
-        formula = self.compile(equation)
-        result = self.solve(formula, variables)
+        self.variables = variables
+        try:
+            formula = self.compile(equation)
+            result = self.solve(formula, variables)
+        finally:
+            del self.variables  # remove attribute
 
         if auto_round and result % 1 == 0:
             return int(result)
@@ -80,6 +85,11 @@ class Snipped:
         self.equation = equation
         self.compiler = compiler
 
+    @property
+    def val(self):
+        result = self.compiler.compute(self.equation, self.compiler.variables, auto_round=False)
+        return result
+
 
 class Function(Snipped):
     def __init__(self, name: str, equation: str, compiler: MathCompiler):
@@ -88,6 +98,11 @@ class Function(Snipped):
             self.callback = compiler.functions[name]
         except KeyError:
             raise FunctionMissingError("can't find {!r}".format(name))
+
+    @property
+    def val(self):
+        result = super().val
+        return self.callback(result)
 
 
 class Brackets(Snipped):
